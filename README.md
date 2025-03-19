@@ -1,9 +1,33 @@
-# Steam Playtime Query Script
+# Steam Playtime Scripts
 
-This script fetches the total playtime for a specific game from the Steam API.
+These scripts will fetch game information using the Steam API.
+
+## steam_game_lookup.py
+
+This will help you find a Game ID or find a game name from a Game ID, examples
+
+```
+$ ./steam_game_lookup.py
+Enter a game name or game ID: vrchat
+Game ID: 438100
+
+$ ./steam_game_lookup.py
+Enter a game name or game ID: 438100
+Game Name: VRChat
+```
+
+## steam_playtime.py
+
+This will take a single argument of the Game ID and give you the total playtime in that game, example
+
+```
+$ ./steam_playtime.py 438100
+Total playtime for the game (App ID 438100): 8007.92 hours
+```
 
 ## Features
 - Reads `STEAM_API_KEY` and `STEAM_ID` from `steam_vars.txt`
+- Fetches steam Game ID by name or steam Game Name by ID
 - Fetches total playtime for a game using its **App ID**
 - Supports direct execution (`chmod +x steam_playtime.py`)
 - Uses **command-line arguments** for flexibility
@@ -26,17 +50,21 @@ This script fetches the total playtime for a specific game from the Steam API.
 ## Installation & Setup
 1. Clone the repository or create a new script file:
    ```sh
-   git clone https://github.com/yourusername/steam-playtime-query.git
-   cd steam-playtime-query
+   git clone https://github.com/M1XZG/Fetch-Steam-Game-Time.git
+   cd Fetch-Steam-Game-Time
    ```
 2. Make the script executable (Linux/macOS):
    ```sh
    chmod +x steam_playtime.py
    ```
+3. You may also require the `requests` package so I've provided the `requirements.txt` for you
+   ```sh
+   pip3 install -r requirements.txt
+   ```
 
 ---
 
-## Usage
+## Usage steam_playtime.py
 Run the script with the game's **App ID** as a command-line argument:
 
 ### Method 1: Direct Execution
@@ -56,82 +84,3 @@ python3 steam_playtime.py 730
 ```
 Total playtime for the game (App ID 730): 125.5 hours
 ```
-
----
-
-## Script (`steam_playtime.py`)
-```python
-#!/usr/bin/env python3
-
-import requests
-import argparse
-
-# Function to read Steam API key and Steam ID from a file
-def load_steam_vars(filename="steam_vars.txt"):
-    steam_vars = {}
-    try:
-        with open(filename, "r") as file:
-            for line in file:
-                key, value = line.strip().split("=")
-                steam_vars[key] = value
-    except FileNotFoundError:
-        print(f"Error: '{filename}' not found. Please create it with your Steam API key and Steam ID.")
-        exit(1)
-    except ValueError:
-        print(f"Error: Invalid format in '{filename}'. Ensure it's formatted as KEY=VALUE.")
-        exit(1)
-    
-    return steam_vars.get("STEAM_API_KEY"), steam_vars.get("STEAM_ID")
-
-# Load API key and Steam ID
-STEAM_API_KEY, STEAM_ID = load_steam_vars()
-
-def get_playtime(steam_id, app_id, api_key):
-    url = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/"
-    params = {
-        "key": api_key,
-        "steamid": steam_id,
-        "include_played_free_games": True,
-        "format": "json"
-    }
-    
-    response = requests.get(url, params=params)
-    
-    if response.status_code != 200:
-        print("Error: Failed to fetch data from Steam API.")
-        return None
-    
-    data = response.json()
-    
-    if "response" in data and "games" in data["response"]:
-        games = data["response"]["games"]
-        for game in games:
-            if game["appid"] == int(app_id):
-                playtime_minutes = game["playtime_forever"]
-                playtime_hours = round(playtime_minutes / 60, 2)
-                return playtime_hours
-    
-    print("Game not found in the user's library.")
-    return None
-
-def main():
-    parser = argparse.ArgumentParser(description="Get total playtime for a specific Steam game.")
-    parser.add_argument("app_id", type=int, help="The Steam App ID of the game")
-    
-    args = parser.parse_args()
-    
-    playtime = get_playtime(STEAM_ID, args.app_id, STEAM_API_KEY)
-    if playtime is not None:
-        print(f"Total playtime for the game (App ID {args.app_id}): {playtime} hours")
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## License
-MIT License (or add your preferred license here).
-
-## Author
-[Your Name](https://github.com/yourusername/)
