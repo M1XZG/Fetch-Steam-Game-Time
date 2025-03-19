@@ -28,6 +28,24 @@ $ ./steam_game_lookup.py vrchat
 Game ID: 438100
 ```
 
+## my-steam-playtime.py
+
+This will collect the hours of game play for every game in your steam library and output a markdown table sorted with most hours at the top. By default this will print the top 15 games, you can override this by using the `-n X` option where X is the number of games to display. If you want to display all games just use something like `99999`. Example output:
+
+` $ ./my-steam-playtime.py -n 10`
+| Rank | Game Name | Total Playtime (Hours) |
+|------|-----------|-------------------------|
+| 1 | VRChat | 8008.4 |
+| 2 | OVR Toolkit | 7201.5 |
+| 3 | OVR Advanced Settings | 7187.7 |
+| 4 | Standable: Full Body Estimation | 4770.9 |
+| 5 | fpsVR | 2498.3 |
+| 6 | Overwatch® 2 | 592.6 |
+| 7 | World of Warships | 425.7 |
+| 8 | Rust | 415.1 |
+| 9 | Satisfactory | 248.7 |
+| 10 | Stardew Valley | 175.9 |
+
 ## steam_playtime.py
 
 This will take a single argument of the Game ID and give you the total playtime in that game, example
