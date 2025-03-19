@@ -54,7 +54,7 @@ Total playtime for the game (App ID 438100): 8007.92 hours
    ```
 2. Make the script executable (Linux/macOS):
    ```sh
-   chmod +x steam_playtime.py
+   chmod +x *.py
    ```
 3. You may also require the `requests` package so I've provided the `requirements.txt` for you
    ```sh
