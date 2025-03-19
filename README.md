@@ -4,6 +4,8 @@ These scripts will fetch game information using the Steam API.
 
 ## steam_game_lookup.py
 
+This script mostly works but I have found it can fail to find some games both by ID or name, I'm putting this down to some weird API stuff and will find a fix for it.
+
 This will help you find a Game ID or find a game name from a Game ID, examples
 
 ```
@@ -14,6 +16,16 @@ Game ID: 438100
 $ ./steam_game_lookup.py
 Enter a game name or game ID: 438100
 Game Name: VRChat
+```
+
+You can also run this and provide the Game ID or game name on the command line and have it returned
+
+```
+$ ./steam_game_lookup.py 438100
+Game Name: VRChat
+
+$ ./steam_game_lookup.py vrchat
+Game ID: 438100
 ```
 
 ## steam_playtime.py

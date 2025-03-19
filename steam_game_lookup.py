@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-
 import requests
 import os
+import sys
 
 def load_steam_vars(filename="steam_vars.txt"):
     """Load Steam API key and Steam ID from a file."""
     steam_vars = {}
     if not os.path.exists(filename):
         raise FileNotFoundError(f"Configuration file '{filename}' not found.")
-
+    
     with open(filename, "r") as file:
         for line in file:
             key, value = line.strip().split("=", 1)
             steam_vars[key] = value
-
+    
     return steam_vars.get("STEAM_API_KEY"), steam_vars.get("STEAM_ID")
 
 def get_owned_games(api_key, steam_id):
@@ -25,7 +25,7 @@ def get_owned_games(api_key, steam_id):
         "include_appinfo": True
     }
     response = requests.get(url, params=params)
-
+    
     if response.status_code == 200:
         return response.json().get("response", {}).get("games", [])
     else:
@@ -51,14 +51,17 @@ def main():
     if not api_key or not steam_id:
         print("Error: Steam API Key or Steam ID is missing in steam_vars.txt")
         return
-
+    
     games = get_owned_games(api_key, steam_id)
     if not games:
         print("No games found or error fetching games.")
         return
-
-    search = input("Enter a game name or game ID: ")
-
+    
+    if len(sys.argv) > 1:
+        search = " ".join(sys.argv[1:])
+    else:
+        search = input("Enter a game name or game ID: ")
+    
     if search.isdigit():
         search_id = int(search)
         result = find_game_name(search_id, games)
