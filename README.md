@@ -117,3 +117,10 @@ python3 steam_playtime.py 730
 ```
 Total playtime for the game (App ID 730): 125.5 hours
 ```
+
+## Using Go
+There is also a version for Go which can be used.
+1. Install Go
+2. Fill in the `STEAM_API_KEY` and `STEAM_ID` in the `steam_vars.txt` file
+3. Build the Go script `go build my-steam-playtime.go`
+4. Run the file `./my-steam-playtime`
