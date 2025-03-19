@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-# filepath: my-steam-playtime.py
+# filepath: steam_games_report.py
 
 import requests
 import argparse
+import json  # Add import for JSON
 
 def read_steam_vars(file_path):
     """Reads the Steam API key and Steam ID from a file."""
@@ -45,14 +46,44 @@ def generate_markdown_table(games, num_results):
         table += f"| {rank} | {game['name']} | {playtime_hours:.1f} |\n"  # Format to 1 decimal place
     return table
 
+def generate_html_table(games, num_results):
+    """Generates an HTML table for the top games sorted by playtime."""
+    sorted_games = sorted(games, key=lambda x: x['playtime_forever'], reverse=True)[:num_results]
+    table = "<table>\n"
+    table += "  <tr><th>Rank</th><th>Game Name</th><th>Total Playtime (Hours)</th></tr>\n"
+    for rank, game in enumerate(sorted_games, start=1):
+        playtime_hours = game['playtime_forever'] / 60  # Convert minutes to hours
+        table += f"  <tr><td>{rank}</td><td>{game['name']}</td><td>{playtime_hours:.1f}</td></tr>\n"
+    table += "</table>"
+    return table
+
+def generate_json_output(games, num_results):
+    """Generates a JSON output for the top games sorted by playtime."""
+    sorted_games = sorted(games, key=lambda x: x['playtime_forever'], reverse=True)[:num_results]
+    output = [
+        {
+            "rank": rank,
+            "game_name": game['name'],
+            "total_playtime_hours": round(game['playtime_forever'] / 60, 1)  # Convert minutes to hours
+        }
+        for rank, game in enumerate(sorted_games, start=1)
+    ]
+    return json.dumps(output, indent=4)  # Pretty-print JSON with indentation
+
 def main():
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Generate a Markdown table of your Steam games sorted by playtime.")
+    parser = argparse.ArgumentParser(description="Generate a table of your Steam games sorted by playtime.")
     parser.add_argument(
         "-n", "--num-results",
         type=int,
         default=15,
         help="Number of top games to display (default: 15)"
+    )
+    parser.add_argument(
+        "--format",
+        choices=["markdown", "html", "json"],  # Add "json" as a valid choice
+        default="markdown",
+        help="Output format for the table (default: markdown)"
     )
     args = parser.parse_args()
 
@@ -72,9 +103,14 @@ def main():
         print("No games found or failed to retrieve games.")
         exit(1)
 
-    # Generate and print the Markdown table
-    markdown_table = generate_markdown_table(games, args.num_results)
-    print(markdown_table)
+    # Generate and print the table in the specified format
+    if args.format == "markdown":
+        table = generate_markdown_table(games, args.num_results)
+    elif args.format == "html":
+        table = generate_html_table(games, args.num_results)
+    elif args.format == "json":  # Handle JSON format
+        table = generate_json_output(games, args.num_results)
+    print(table)
 
 if __name__ == "__main__":
     main()
