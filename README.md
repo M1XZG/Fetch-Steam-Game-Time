@@ -46,6 +46,10 @@ This will collect the hours of game play for every game in your steam library an
 | 9 | Satisfactory | 248.7 |
 | 10 | Stardew Valley | 175.9 |
 
+To get additional options run `my-steam-playtime.py -h`
+
+Additional output formats include HTML table and JSON.
+
 ## steam_playtime.py
 
 This will take a single argument of the Game ID and give you the total playtime in that game, example
