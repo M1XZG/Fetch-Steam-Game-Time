@@ -71,7 +71,7 @@ Total playtime for the game (App ID 438100): 8007.92 hours
 ## Prerequisites
 1. **Get a Steam API Key** from [Steam Developer Portal](https://steamcommunity.com/dev/apikey).
 2. **Find your Steam ID** (64-bit format) from [Steam ID Finder](https://steamid.io/).
-3. **Create a `steam_vars.txt` file** in the same directory as the script:
+3. **Rename `steam_vars.TEMPLATE` to `steam_vars.txt`** in the same directory as the script:
 
    ```txt
    STEAM_API_KEY=your_actual_api_key
