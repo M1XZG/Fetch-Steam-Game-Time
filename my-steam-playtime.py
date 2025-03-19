@@ -23,7 +23,7 @@ def read_steam_vars(file_path):
 
 def fetch_steam_games(api_key, steam_id):
     """Fetches the list of games and playtime from the Steam API."""
-    url = f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
+    url = f"https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
     params = {
         'key': api_key,
         'steamid': steam_id,
@@ -47,13 +47,15 @@ def generate_markdown_table(games, num_results):
     return table
 
 def generate_html_table(games, num_results):
-    """Generates an HTML table for the top games sorted by playtime."""
+    """Generates an HTML table for the top games sorted by playtime, including game artwork."""
     sorted_games = sorted(games, key=lambda x: x['playtime_forever'], reverse=True)[:num_results]
     table = "<table>\n"
-    table += "  <tr><th>Rank</th><th>Game Name</th><th>Total Playtime (Hours)</th></tr>\n"
+    table += "  <tr><th>Rank</th><th>Game Name</th><th>Artwork</th><th>Total Playtime (Hours)</th></tr>\n"
     for rank, game in enumerate(sorted_games, start=1):
         playtime_hours = game['playtime_forever'] / 60  # Convert minutes to hours
-        table += f"  <tr><td>{rank}</td><td>{game['name']}</td><td>{playtime_hours:.1f}</td></tr>\n"
+        # Construct the artwork URL using HTTPS
+        artwork_url = f"https://media.steampowered.com/steamcommunity/public/images/apps/{game['appid']}/{game['img_icon_url']}.jpg"
+        table += f"  <tr><td>{rank}</td><td>{game['name']}</td><td><img src='{artwork_url}' alt='Artwork' width='50'></td><td>{playtime_hours:.1f}</td></tr>\n"
     table += "</table>"
     return table
 
