@@ -124,3 +124,13 @@ There is also a version for Go which can be used.
 2. Fill in the `STEAM_API_KEY` and `STEAM_ID` in the `steam_vars.txt` file
 3. Build the Go script `go build my-steam-playtime.go`
 4. Run the file `./my-steam-playtime`
+
+Repeat steps 3 and 4 above for `steam_game_lookup.go` and `steam_playtime.py`. 
+
+Please note for `steam_playtime` you will need use the syntax below where `XXXXX` is the game ID number:
+
+```
+./steam_playtime -app_id XXXXX
+```
+
+---
