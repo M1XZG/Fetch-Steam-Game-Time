@@ -1,4 +1,7 @@
 .env
-my-steam-playtime
 steam_vars.txt
 testing/
+# compiled GO commands
+my-steam-playtime
+steam_game_lookup
+steam_playtime
